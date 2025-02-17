@@ -21,9 +21,9 @@ public:
 private:
     double dist_margin_;
     double size_margin_;
-    std::map<int, vision_msgs::msg::BoundingBox2D> objects_;
+    std::map<int, std::vector<vision_msgs::msg::BoundingBox2D>> objects_;
 
-    std::map<int, vision_msgs::msg::BoundingBox2D> updateObjects(
+    std::map<int, std::vector<vision_msgs::msg::BoundingBox2D>> updateObjects(
         robot_custom_msgs::msg::AIDataArray object_array,
         vision_msgs::msg::BoundingBox2DArray object_bbox_array);
 };

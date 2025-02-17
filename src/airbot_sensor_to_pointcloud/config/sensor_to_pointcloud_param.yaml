@@ -32,8 +32,8 @@ airbot_sensor_to_pointcloud:
         use: true
         margin:
           distance_diff: 0.5
-          width_diff: 0.0
-          height_diff: 0.0
+          width_diff: 0.1
+          height_diff: 0.1
     
     cliff:
       use: true

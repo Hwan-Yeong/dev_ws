@@ -1,14 +1,18 @@
 #include "logger/camera_object_logger.hpp"
 
-CameraObjectLogger::CameraObjectLogger(double dist_margin = 0.1,
-                                       double size_margin = 0.1)
-    : dist_margin_(dist_margin),
-      size_margin_(size_margin)
+CameraObjectLogger::CameraObjectLogger()
 {
 }
 
 CameraObjectLogger::~CameraObjectLogger()
 {
+}
+
+void CameraObjectLogger::updateParams(double dist_margin, double width_margin, double height_margin)
+{
+    dist_margin_ = dist_margin;
+    width_margin_ = width_margin;
+    height_margin_ = height_margin;
 }
 
 void CameraObjectLogger::log(std::pair<robot_custom_msgs::msg::AIDataArray, vision_msgs::msg::BoundingBox2DArray> object_info)
@@ -53,7 +57,7 @@ std::map<int, std::vector<vision_msgs::msg::BoundingBox2D>> CameraObjectLogger::
                 double width_diff = std::abs(object.size_x - old_object.size_x);
                 double height_diff = std::abs(object.size_y - old_object.size_y);
 
-                if (distance <= dist_margin_ && width_diff <= size_margin_ && height_diff <= size_margin_) {
+                if (distance <= dist_margin_ && width_diff <= width_margin_ && height_diff <= height_margin_) {
                     is_new_object = false;
                     break;
                 }

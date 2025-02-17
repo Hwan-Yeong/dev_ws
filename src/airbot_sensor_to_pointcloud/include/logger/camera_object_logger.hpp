@@ -11,16 +11,17 @@
 class CameraObjectLogger
 {
 public:
-    CameraObjectLogger(double dist_margin,
-                       double size_margin);
+    CameraObjectLogger();
     ~CameraObjectLogger();
 
+    void updateParams(double dist_margin, double width_margin, double height_margin);
     void log(std::pair<robot_custom_msgs::msg::AIDataArray, vision_msgs::msg::BoundingBox2DArray> object_info);
     void logInfoClear();
 
 private:
     double dist_margin_;
-    double size_margin_;
+    double width_margin_;
+    double height_margin_;
     std::map<int, std::vector<vision_msgs::msg::BoundingBox2D>> objects_;
 
     std::map<int, std::vector<vision_msgs::msg::BoundingBox2D>> updateObjects(

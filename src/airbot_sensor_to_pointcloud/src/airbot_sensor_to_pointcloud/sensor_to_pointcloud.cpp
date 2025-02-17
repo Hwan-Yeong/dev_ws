@@ -21,9 +21,6 @@ double camera_sensor_frame_z_translate = 0.5331;        //[meter]
 double cliff_sensor_distance_center_to_front_ir = 0.15; //[meter]
 double cliff_sensor_angle_to_next_ir_sensor = 50;       //[deg]
 
-double camera_logger_distance_margin = 0.2; //[meter]
-double camera_logger_size_margin = 0.2; //[meter]
-
 SensorToPointcloud::SensorToPointcloud()
     : rclcpp::Node("airbot_sensor_to_pointcloud"),
     point_cloud_tof_(tof_top_sensor_frame_x_translate,
@@ -42,9 +39,7 @@ SensorToPointcloud::SensorToPointcloud()
                        cliff_sensor_angle_to_next_ir_sensor),
     bounding_box_generator_(camera_sensor_frame_x_translate,
                             camera_sensor_frame_y_translate,
-                            camera_sensor_frame_z_translate),
-    camera_object_logger_(camera_logger_distance_margin,
-                          camera_logger_size_margin)
+                            camera_sensor_frame_z_translate)
 {
     // Declare Parameters
     this->declare_parameter("target_frame","base_link");
@@ -62,6 +57,9 @@ SensorToPointcloud::SensorToPointcloud()
     this->declare_parameter("camera.class_id_confidence_th",std::vector<std::string>());
     this->declare_parameter("camera.object_direction",false);
     this->declare_parameter("camera.logger.use",false);
+    this->declare_parameter("camera.logger.margin.distance_diff",1.0);
+    this->declare_parameter("camera.logger.margin.width_diff",1.0);
+    this->declare_parameter("camera.logger.margin.height_diff",1.0);
     this->declare_parameter("cliff.use",false);
     this->declare_parameter("cliff.publish_rate_ms",100);
 
@@ -81,6 +79,9 @@ SensorToPointcloud::SensorToPointcloud()
     this->get_parameter("camera.class_id_confidence_th", camera_param_raw_vector);
     this->get_parameter("camera.object_direction", camera_object_direction);
     this->get_parameter("camera.logger.use", use_camera_object_logger);
+    this->get_parameter("camera.logger.margin.distance_diff", camera_logger_distance_margin);
+    this->get_parameter("camera.logger.margin.width_diff", camera_logger_width_margin);
+    this->get_parameter("camera.logger.margin.height_diff", camera_logger_height_margin);
     this->get_parameter("cliff.use", ues_cliff);
     this->get_parameter("cliff.publish_rate_ms", publish_rate_cliff);
 
@@ -88,6 +89,7 @@ SensorToPointcloud::SensorToPointcloud()
     point_cloud_tof_.updateTargetFrame(target_frame);
     bounding_box_generator_.updateTargetFrame(target_frame);
     point_cloud_cliff_.updateTargetFrame(target_frame);
+    camera_object_logger_.updateParams(camera_logger_distance_margin,camera_logger_width_margin,camera_logger_height_margin);
     for (const auto& item : camera_param_raw_vector) {
         std::istringstream ss(item);
         std::string key, value;

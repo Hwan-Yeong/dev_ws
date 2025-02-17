@@ -65,6 +65,9 @@ private:
     bool ues_cliff;
     bool use_camera_object_logger;
     float camera_pointcloud_resolution;
+    double camera_logger_distance_margin;
+    double camera_logger_width_margin;
+    double camera_logger_height_margin;
     std::vector<std::string> camera_param_raw_vector;
     std::map<int, int> camera_class_id_confidence_th;
     bool camera_object_direction;

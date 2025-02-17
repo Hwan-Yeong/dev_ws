@@ -21,10 +21,11 @@ void CameraObjectLogger::log(std::pair<robot_custom_msgs::msg::AIDataArray, visi
 
     if (new_objects != objects_) {
         objects_ = new_objects;
-        RCLCPP_INFO(rclcpp::get_logger("CameraObjectLogger"), "================ [UPDATE] ================");
+        auto logger = rclcpp::get_logger("CameraObjectLogger");
+        RCLCPP_INFO(logger, "================ [UPDATE] ================");
         for (const auto& [id, object_list] : objects_) {
             for (const auto& object : object_list) {
-                RCLCPP_INFO(rclcpp::get_logger("CameraObjectLogger"), "[ID]: %u, [Position (X, Y): (%f, %f)], [Size (W, H): (%f, %f)]",
+                RCLCPP_INFO(logger, "[ID]: %u, [Position (X, Y): (%3f, %3f)], [Size (W, H): (%3f, %3f)]",
                             id, object.center.position.x, object.center.position.y, object.size_x, object.size_y);
             }
         }
